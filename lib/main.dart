@@ -11,6 +11,7 @@ import 'bloc/basket/basket_bloc.dart';
 import 'bloc/basket/basket_event.dart';
 import 'bloc/category/category_bloc.dart';
 import 'bloc/home/home_bloc.dart';
+import 'bloc/home/home_event.dart';
 import 'constants/colors.dart';
 import 'data/model/addbasket.dart';
 import 'data/repository/authentication_repository.dart';
@@ -169,7 +170,11 @@ List<Widget> widgetList() {
       child: const CategoryScreen(),
     ),
     BlocProvider(
-      create: (context) => locator.get<HomeBloc>(),
+      create: (conext) {
+        var bloc = locator.get<HomeBloc>();
+        bloc.add(HomeGetDataEvent());
+        return bloc;
+      },
       child: const HomeScreen(),
     )
   ];

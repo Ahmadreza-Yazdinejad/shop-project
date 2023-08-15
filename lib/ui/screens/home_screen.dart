@@ -13,21 +13,8 @@ import '../widgets/category_item.dart';
 import '../widgets/product_item.dart';
 import 'all_product_screen.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
-
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  @override
-  void initState() {
-    BlocProvider.of<HomeBloc>(context).add(
-      HomeGetDataEvent(),
-    );
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,76 +24,83 @@ class _HomeScreenState extends State<HomeScreen> {
         body: Center(
           child: BlocBuilder<HomeBloc, HomeState>(
             builder: (context, state) {
-              return CustomScrollView(
-                slivers: [
-                  const TopPadding(),
-                  if (state is HomeLoading) ...{
-                    const SliverToBoxAdapter(
-                      child: Center(
-                        child: SizedBox(
-                          width: 50,
-                          height: 50,
-                          child: CircularProgressIndicator(),
+              return RefreshIndicator(
+                color: CustomColor.blue,
+                backgroundColor: Colors.white,
+                onRefresh: () async {
+                  context.read<HomeBloc>().add(HomeGetDataEvent());
+                },
+                child: CustomScrollView(
+                  slivers: [
+                    const TopPadding(),
+                    if (state is HomeLoading) ...{
+                      const SliverToBoxAdapter(
+                        child: Center(
+                          child: SizedBox(
+                            width: 50,
+                            height: 50,
+                            child: CircularProgressIndicator(),
+                          ),
                         ),
                       ),
-                    ),
-                  } else ...{
-                    const SearchBox(),
-                    if (state is HomeGetData) ...[
-                      state.bannerList.fold(
-                        (l) {
-                          return Text(l);
-                        },
-                        (r) {
-                          return BannerList(
-                            banner: r,
-                          );
-                        },
-                      ),
-                    ],
-                    const CategoryTitle(),
-                    if (state is HomeGetData) ...[
-                      state.categoryList.fold(
-                        (l) {
-                          return SliverToBoxAdapter(
-                            child: Text(l),
-                          );
-                        },
-                        (categoryList) {
-                          return CategoryItem(listCategory: categoryList);
-                        },
-                      ),
-                    ],
-                    const HottestProductTitle(),
-                    if (state is HomeGetData) ...[
-                      state.productBestSellerList.fold(
-                        (l) {
-                          return SliverToBoxAdapter(
-                            child: Text(l),
-                          );
-                        },
-                        (r) {
-                          return HottestProductItem(
-                            productList: r,
-                          );
-                        },
-                      )
-                    ],
-                    const MostViewedProductTitle(),
-                    if (state is HomeGetData) ...[
-                      state.productHottestList.fold(
-                        (l) {
-                          return SliverToBoxAdapter(
-                            child: Text(l),
-                          );
-                        },
-                        (r) {
-                          return MostViewedProductItem(list: r);
-                        },
-                      ),
-                    ]
-                  }
-                ],
+                    } else ...{
+                      const SearchBox(),
+                      if (state is HomeGetData) ...[
+                        state.bannerList.fold(
+                          (l) {
+                            return Text(l);
+                          },
+                          (r) {
+                            return BannerList(
+                              banner: r,
+                            );
+                          },
+                        ),
+                      ],
+                      const CategoryTitle(),
+                      if (state is HomeGetData) ...[
+                        state.categoryList.fold(
+                          (l) {
+                            return SliverToBoxAdapter(
+                              child: Text(l),
+                            );
+                          },
+                          (categoryList) {
+                            return CategoryItem(listCategory: categoryList);
+                          },
+                        ),
+                      ],
+                      const HottestProductTitle(),
+                      if (state is HomeGetData) ...[
+                        state.productBestSellerList.fold(
+                          (l) {
+                            return SliverToBoxAdapter(
+                              child: Text(l),
+                            );
+                          },
+                          (r) {
+                            return HottestProductItem(
+                              productList: r,
+                            );
+                          },
+                        )
+                      ],
+                      const MostViewedProductTitle(),
+                      if (state is HomeGetData) ...[
+                        state.productHottestList.fold(
+                          (l) {
+                            return SliverToBoxAdapter(
+                              child: Text(l),
+                            );
+                          },
+                          (r) {
+                            return MostViewedProductItem(list: r);
+                          },
+                        ),
+                      ]
+                    }
+                  ],
+                ),
               );
             },
           ),
