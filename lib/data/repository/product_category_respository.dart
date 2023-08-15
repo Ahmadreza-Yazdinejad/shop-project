@@ -19,7 +19,7 @@ class ProductCategoryRespository extends IProductCategoryRepository {
           await _datasource.getProductCategoryList(categoryId);
       return right(produuctCategoryList);
     } on ApiException {
-      return left('Error fuck');
+      return left('ارور نا مشخص');
     }
   }
 }

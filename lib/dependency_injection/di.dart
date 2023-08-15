@@ -63,29 +63,29 @@ void _component() {
     ),
   );
   //CategoryBloc
-  locator.registerSingleton<CategoryBloc>(
-    CategoryBloc(
+  locator.registerFactory<CategoryBloc>(
+    () => CategoryBloc(
       locator.get(),
     ),
   );
   //BasketBloc
-  locator.registerSingleton<BasketBloc>(
-    BasketBloc(
+  locator.registerFactory<BasketBloc>(
+    () => BasketBloc(
       locator.get(),
       locator.get(),
     ),
   );
   //HomeBloc
-  locator.registerSingleton<HomeBloc>(
-    HomeBloc(
+  locator.registerFactory<HomeBloc>(
+    () => HomeBloc(
       locator.get(),
       locator.get(),
       locator.get(),
     ),
   );
   //ProductDetailBloc
-  locator.registerSingleton<ProductDetailBloc>(
-    ProductDetailBloc(
+  locator.registerFactory<ProductDetailBloc>(
+    () => ProductDetailBloc(
       locator.get(),
       locator.get(),
     ),
@@ -121,8 +121,8 @@ void _repository() {
   );
 
   //IProductDetailRepository
-  locator.registerSingleton<IProductDetailRepository>(
-    ProductDetailRepository(
+  locator.registerFactory<IProductDetailRepository>(
+    () => ProductDetailRepository(
       locator.get(),
     ),
   );
@@ -163,8 +163,8 @@ void _dataSource() {
   );
 
   //IProductDetailDataSource
-  locator.registerSingleton<IProductDetailDataSource>(
-    ProductDetailRemoteDataSource(
+  locator.registerFactory<IProductDetailDataSource>(
+    () => ProductDetailRemoteDataSource(
       locator.get(),
     ),
   );

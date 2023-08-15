@@ -19,7 +19,7 @@ class AuthenticatonRespository extends IAuthenticationRespository {
     } on ApiException {
       return left('شما یک مرتبه ثبت نام شدید');
     } catch (ex) {
-      return left('Error');
+      return left('ارور نا مشخص');
     }
   }
 

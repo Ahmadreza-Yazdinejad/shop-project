@@ -18,7 +18,7 @@ class CategoryRepository extends ICategoryRepository {
 
       return right(response);
     } on ApiException {
-      return left('مشکلی پیش آمده');
+      return left('ارور نا مشخص');
     }
   }
 }

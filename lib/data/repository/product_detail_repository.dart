@@ -20,7 +20,7 @@ class ProductRepository extends IProductRepository {
       var response = await _datasource.productList();
       return right(response);
     } on ApiException {
-      return left('you have an Error');
+      return left('ارور نا مشخص');
     }
   }
 

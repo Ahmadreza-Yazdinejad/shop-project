@@ -17,7 +17,7 @@ class BannerRepository extends IBannerRepository {
       List<BannerCampain> bannerListItem = await _datasource.bannerListt();
       return right(bannerListItem);
     } on ApiException {
-      return left('Error 2');
+      return left('ارور نا مشخص');
     }
   }
 }

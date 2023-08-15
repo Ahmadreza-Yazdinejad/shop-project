@@ -19,7 +19,7 @@ class BasketRepository extends IBasketRepository {
       await _datasource.addproductToBox(basketItem);
       return right('محصول به سبد خرید اضافه شد');
     } catch (ex) {
-      return left('خطا محصول مورد نظر به سبد خرید اضافه نشد');
+      return left('خطا, محصول مورد نظر به سبد خرید اضافه نشد');
     }
   }
 

@@ -25,7 +25,7 @@ class ProductDetailRepository extends IProductDetailRepository {
       var response = await _dataSource.productDetailImageList(productId);
       return right(response);
     } on ApiException {
-      return left('Error');
+      return left('ارور نا مشخص');
     }
   }
 
@@ -37,7 +37,7 @@ class ProductDetailRepository extends IProductDetailRepository {
           await _dataSource.getProductVarientList(productId);
       return right(vareintsProductList);
     } on ApiException {
-      return left('Erorr Boy!!');
+      return left('ارور نا مشخص');
     }
   }
 
@@ -49,7 +49,7 @@ class ProductDetailRepository extends IProductDetailRepository {
           await _dataSource.getCategoryProductDetail(categoryId);
       return right(categoryDetail);
     } on ApiException {
-      return left('Erorr Boy!!');
+      return left('ارور نا مشخص');
     }
   }
 
@@ -60,7 +60,7 @@ class ProductDetailRepository extends IProductDetailRepository {
       var productProperties = await _dataSource.getProperties(productId);
       return right(productProperties);
     } on ApiException {
-      return left('Erorr Boy!!');
+      return left('ارور نا مشخص');
     }
   }
 }
