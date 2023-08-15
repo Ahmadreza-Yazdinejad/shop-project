@@ -1,4 +1,5 @@
 import 'package:apple_shop/bloc/basket/basket_event.dart';
+import 'package:apple_shop/utility/extentions/int_extentions.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -96,7 +97,7 @@ class _PayButtonState extends State<PayButton> {
           },
           child: Text(widget.finalPrice == 0
               ? 'سبد خرید شما خالی است'
-              : '${widget.finalPrice} : جمع سبد خرید'),
+              : '${widget.finalPrice.formatIntAsPriceWithCommas()} : جمع سبد خرید'),
         ),
       ),
     );
@@ -249,7 +250,7 @@ class CartItem extends StatelessWidget {
                             width: 4,
                           ),
                           Text(
-                            basketItem.realPrice.toString(),
+                            basketItem.realPrice!.formatIntAsPriceWithCommas(),
                             style:
                                 const TextStyle(fontSize: 12, fontFamily: 'SM'),
                           ),
@@ -300,7 +301,7 @@ class CartItem extends StatelessWidget {
                 const SizedBox(
                   width: 5,
                 ),
-                Text(basketItem.realPrice.toString()),
+                Text(basketItem.realPrice.formatIntAsPriceWithCommas()),
               ],
             ),
           )

@@ -69,8 +69,8 @@ void _component() {
     ),
   );
   //BasketBloc
-  locator.registerFactory<BasketBloc>(
-    () => BasketBloc(
+  locator.registerSingleton<BasketBloc>(
+    BasketBloc(
       locator.get(),
       locator.get(),
     ),

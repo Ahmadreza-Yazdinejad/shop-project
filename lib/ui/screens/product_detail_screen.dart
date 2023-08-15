@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:apple_shop/utility/extentions/int_extentions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../bloc/basket/basket_bloc.dart';
@@ -913,7 +914,7 @@ class Price extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          '${product.price}',
+                          product.price.formatIntAsPriceWithCommas(),
                           style: const TextStyle(
                               decoration: TextDecoration.lineThrough,
                               fontSize: 12,
@@ -921,9 +922,9 @@ class Price extends StatelessWidget {
                               fontFamily: 'SM'),
                         ),
                         Text(
-                          '${product.realPrice}',
+                          product.realPrice!.formatIntAsPriceWithCommas(),
                           style: const TextStyle(
-                            fontSize: 16,
+                            fontSize: 14,
                             fontFamily: 'SM',
                             color: Colors.white,
                           ),
