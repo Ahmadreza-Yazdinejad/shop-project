@@ -13,7 +13,10 @@ class CommnetRemoteDataSource extends ICommnetDataSource {
   @override
   Future<List<Comment>> getCommentList(String productId) async {
     try {
-      Map<String, String> qParames = {'filter': 'product_id="$productId"'};
+      Map<String, String> qParames = {
+        'filter': 'product_id="$productId"',
+        'expand': 'user_id'
+      };
       var response = await _dio.get('collections/comment/records',
           queryParameters: qParames);
       return response.data['items']

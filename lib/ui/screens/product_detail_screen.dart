@@ -228,6 +228,7 @@ class UsersFeedBack extends StatelessWidget {
       child: GestureDetector(
         onTap: () {
           showModalBottomSheet(
+            backgroundColor: CustomColor.backgroundScreenColor,
             context: context,
             builder: (context) {
               return BlocProvider(
@@ -238,13 +239,17 @@ class UsersFeedBack extends StatelessWidget {
                   );
                   return bloc;
                 },
-                child: DraggableScrollableSheet(
-                  initialChildSize: 0.5,
-                  minChildSize: 0.2,
-                  maxChildSize: 0.7,
-                  builder: (context, controller) {
-                    return BottemSheetContent(controller);
-                  },
+                child: Padding(
+                  padding: EdgeInsets.only(
+                      bottom: MediaQuery.of(context).viewInsets.bottom),
+                  child: DraggableScrollableSheet(
+                    initialChildSize: 0.5,
+                    minChildSize: 0.2,
+                    maxChildSize: 0.7,
+                    builder: (context, controller) {
+                      return BottemSheetContent(controller);
+                    },
+                  ),
                 ),
               );
             },
@@ -397,13 +402,57 @@ class BottemSheetContent extends StatelessWidget {
                   if (response.isEmpty) {
                     return const SliverToBoxAdapter(
                       child: Center(
-                          child: Text('نظری برای این محصول ثبت نشده است')),
+                        child: Text('نظری برای این محصول ثبت نشده است'),
+                      ),
                     );
                   } else {
                     return SliverList(
                       delegate: SliverChildBuilderDelegate(
                         (context, index) {
-                          return Text(response[index].text);
+                          return Container(
+                            padding: const EdgeInsets.all(16),
+                            margin: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 8),
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(16)),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      Text(
+                                        response[index].username,
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      const SizedBox(
+                                        height: 8,
+                                      ),
+                                      Text(
+                                        response[index].text,
+                                        textAlign: TextAlign.end,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(
+                                  width: 16,
+                                ),
+                                SizedBox(
+                                  height: 40,
+                                  width: 40,
+                                  child: (response[index].avatar.isNotEmpty)
+                                      ? CatchImage(
+                                          image: response[index].thumnailUrl,
+                                        )
+                                      : Image.asset('assets/images/avatar.png'),
+                                ),
+                              ],
+                            ),
+                          );
                         },
                         childCount: response.length,
                       ),
