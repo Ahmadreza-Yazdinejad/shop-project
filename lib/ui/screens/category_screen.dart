@@ -1,4 +1,5 @@
 import 'package:apple_shop/ui/screens/product_category_screen.dart';
+import 'package:apple_shop/ui/widgets/loading_animaiton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -31,61 +32,60 @@ class _CategoryScreenState extends State<CategoryScreen> {
     return Scaffold(
       backgroundColor: CustomColor.backgroundScreenColor,
       body: SafeArea(
-        child: CustomScrollView(
-          slivers: [
-            const SliverPadding(
-              padding: EdgeInsets.only(top: 18),
-            ),
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.only(
-                  left: 44,
-                  right: 44,
-                  bottom: 32,
-                  top: 20,
+        child: BlocBuilder<CategoryBloc, CategoryState>(
+          builder: (context, state) {
+            return CustomScrollView(
+              slivers: [
+                const SliverPadding(
+                  padding: EdgeInsets.only(top: 18),
                 ),
-                child: Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                      color: Colors.white),
-                  height: 46,
-                  child: Row(
-                    children: [
-                      const SizedBox(
-                        width: 16,
-                      ),
-                      Image.asset('assets/images/icon_apple_blue.png'),
-                      const Expanded(
-                        child: Text(
-                          textAlign: TextAlign.center,
-                          'دسته بندی',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontFamily: 'SB',
-                            color: CustomColor.blue,
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                      left: 44,
+                      right: 44,
+                      bottom: 32,
+                      top: 20,
+                    ),
+                    child: Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                          color: Colors.white),
+                      height: 46,
+                      child: Row(
+                        children: [
+                          const SizedBox(
+                            width: 16,
                           ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            BlocBuilder<CategoryBloc, CategoryState>(
-              builder: (context, state) {
-                if (state is CategoryLoading) {
-                  return const SliverToBoxAdapter(
-                    child: Center(
-                      child: SizedBox(
-                        width: 50,
-                        height: 50,
-                        child: CircularProgressIndicator(),
+                          Image.asset('assets/images/icon_apple_blue.png'),
+                          const Expanded(
+                            child: Text(
+                              textAlign: TextAlign.center,
+                              'دسته بندی',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontFamily: 'SB',
+                                color: CustomColor.blue,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  );
-                } else {
-                  if (state is CategoryGetData) {
-                    return state.list.fold(
+                  ),
+                ),
+                if (state is CategoryLoading) ...{
+                  const SliverToBoxAdapter(
+                    child: Center(
+                      child: Padding(
+                        padding: EdgeInsets.only(top: 240),
+                        child: LoadingAnimation(),
+                      ),
+                    ),
+                  ),
+                } else ...{
+                  if (state is CategoryGetData) ...{
+                    state.list.fold(
                       ((l) {
                         return SliverToBoxAdapter(
                           child: Text(l),
@@ -96,15 +96,15 @@ class _CategoryScreenState extends State<CategoryScreen> {
                           categoryList: categoryList,
                         );
                       },
-                    );
-                  }
-                  return const SliverToBoxAdapter(
+                    ),
+                  },
+                  const SliverToBoxAdapter(
                     child: Text('Error'),
-                  );
+                  ),
                 }
-              },
-            ),
-          ],
+              ],
+            );
+          },
         ),
       ),
     );

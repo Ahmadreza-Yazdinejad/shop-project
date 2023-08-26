@@ -35,7 +35,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  int selectedIndex = 0;
+  int selectedIndex = 3;
   IAuthenticationRespository respository = locator.get();
   @override
   Widget build(BuildContext context) {
@@ -154,9 +154,8 @@ class _MyAppState extends State<MyApp> {
 List<Widget> widgetList() {
   return <Widget>[
     BlocProvider(
-      create: (context) => locator.get<AuthBloc>(),
-      child: LoginScreen(),
-    ),
+        create: (context) => locator.get<AuthBloc>(),
+        child: const LoginScreen()),
     BlocProvider(
       create: (context) {
         var bloc = locator.get<BasketBloc>();

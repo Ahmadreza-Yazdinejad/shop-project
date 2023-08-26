@@ -1,3 +1,4 @@
+import 'package:apple_shop/ui/widgets/loading_animaiton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../bloc/product_category/product_category.bloc.dart';
@@ -32,6 +33,11 @@ class _ProductCategoryScreenState extends State<ProductCategoryScreen> {
       body: SafeArea(
         child: BlocBuilder<ProductCategoryBloc, ProductCategoryState>(
             builder: (context, state) {
+          if (state is ProductCategoryLoading) {
+            return const Center(
+              child: LoadingAnimation(),
+            );
+          }
           return CustomScrollView(
             slivers: [
               const SliverPadding(
@@ -72,30 +78,18 @@ class _ProductCategoryScreenState extends State<ProductCategoryScreen> {
                   ),
                 ),
               ),
-              if (state is ProductCategoryLoading) ...{
-                const SliverToBoxAdapter(
-                  child: Center(
-                    child: SizedBox(
-                      width: 50,
-                      height: 50,
-                      child: CircularProgressIndicator(),
-                    ),
-                  ),
-                ),
-              } else ...{
-                if (state is ProudctCategoryGetData) ...{
-                  state.getProductMachList.fold(
-                    (l) {
-                      return SliverToBoxAdapter(
-                        child: Text(l),
-                      );
-                    },
-                    (r) {
-                      return ProductCategoryyItem(r);
-                    },
-                  )
-                }
-              },
+              if (state is ProudctCategoryGetData) ...{
+                state.getProductMachList.fold(
+                  (l) {
+                    return SliverToBoxAdapter(
+                      child: Text(l),
+                    );
+                  },
+                  (r) {
+                    return ProductCategoryyItem(r);
+                  },
+                )
+              }
             ],
           );
         }),

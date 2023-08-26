@@ -10,6 +10,7 @@ import '../../data/model/main_product.dart';
 import '../../dependency_injection/di.dart';
 import '../widgets/banner_slider.dart';
 import '../widgets/category_item.dart';
+import '../widgets/loading_animaiton.dart';
 import '../widgets/product_item.dart';
 import 'all_product_screen.dart';
 
@@ -28,84 +29,80 @@ class HomeScreen extends StatelessWidget {
                 color: CustomColor.blue,
                 backgroundColor: Colors.white,
                 onRefresh: () async {
-                  context.read<HomeBloc>().add(HomeGetDataEvent());
+                  context.read<HomeBloc>().add(
+                        HomeGetDataEvent(),
+                      );
                 },
-                child: CustomScrollView(
-                  slivers: [
-                    const TopPadding(),
-                    if (state is HomeLoading) ...{
-                      const SliverToBoxAdapter(
-                        child: Center(
-                          child: SizedBox(
-                            width: 50,
-                            height: 50,
-                            child: CircularProgressIndicator(),
-                          ),
-                        ),
-                      ),
-                    } else ...{
-                      const SearchBox(),
-                      if (state is HomeGetData) ...[
-                        state.bannerList.fold(
-                          (l) {
-                            return Text(l);
-                          },
-                          (r) {
-                            return BannerList(
-                              banner: r,
-                            );
-                          },
-                        ),
-                      ],
-                      const CategoryTitle(),
-                      if (state is HomeGetData) ...[
-                        state.categoryList.fold(
-                          (l) {
-                            return SliverToBoxAdapter(
-                              child: Text(l),
-                            );
-                          },
-                          (categoryList) {
-                            return CategoryItem(listCategory: categoryList);
-                          },
-                        ),
-                      ],
-                      const HottestProductTitle(),
-                      if (state is HomeGetData) ...[
-                        state.productBestSellerList.fold(
-                          (l) {
-                            return SliverToBoxAdapter(
-                              child: Text(l),
-                            );
-                          },
-                          (r) {
-                            return HottestProductItem(
-                              productList: r,
-                            );
-                          },
-                        )
-                      ],
-                      const MostViewedProductTitle(),
-                      if (state is HomeGetData) ...[
-                        state.productHottestList.fold(
-                          (l) {
-                            return SliverToBoxAdapter(
-                              child: Text(l),
-                            );
-                          },
-                          (r) {
-                            return MostViewedProductItem(list: r);
-                          },
-                        ),
-                      ]
-                    }
-                  ],
-                ),
+                child: _getHomeScreenContent(state),
               );
             },
           ),
         ),
       ),
+    );
+  }
+}
+
+Widget _getHomeScreenContent(HomeState state) {
+  if (state is HomeLoading) {
+    return const Center(
+      child: LoadingAnimation(),
+    );
+  } else if (state is HomeGetData) {
+    return CustomScrollView(
+      slivers: [
+        const TopPadding(),
+        const SearchBox(),
+        state.bannerList.fold(
+          (l) {
+            return Text(l);
+          },
+          (r) {
+            return BannerList(
+              banner: r,
+            );
+          },
+        ),
+        const CategoryTitle(),
+        state.categoryList.fold(
+          (l) {
+            return SliverToBoxAdapter(
+              child: Text(l),
+            );
+          },
+          (categoryList) {
+            return CategoryItem(listCategory: categoryList);
+          },
+        ),
+        const HottestProductTitle(),
+        state.productBestSellerList.fold(
+          (l) {
+            return SliverToBoxAdapter(
+              child: Text(l),
+            );
+          },
+          (r) {
+            return HottestProductItem(
+              productList: r,
+            );
+          },
+        ),
+        const MostViewedProductTitle(),
+        state.productHottestList.fold(
+          (l) {
+            return SliverToBoxAdapter(
+              child: Text(l),
+            );
+          },
+          (r) {
+            return MostViewedProductItem(list: r);
+          },
+        ),
+      ],
+    );
+  } else {
+    return const Center(
+      child: Text('خطایی در دریافت اطلاعات رخ داد'),
     );
   }
 }

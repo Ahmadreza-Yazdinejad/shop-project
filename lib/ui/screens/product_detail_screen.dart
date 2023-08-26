@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:apple_shop/ui/widgets/loading_animaiton.dart';
 import 'package:apple_shop/utility/extentions/int_extentions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -54,135 +55,128 @@ class DetailContent extends StatelessWidget {
       backgroundColor: CustomColor.backgroundScreenColor,
       body: BlocBuilder<ProductDetailBloc, ProductDetailState>(
         builder: ((context, state) {
+          if (state is ProductDetailLaoding) {
+            return const Center(
+              child: LoadingAnimation(),
+            );
+          }
           return CustomScrollView(
             slivers: [
               const TopPadding(),
-              if (state is ProductDetailLaoding) ...{
-                const SliverToBoxAdapter(
-                  child: Center(
-                    child: SizedBox(
-                      width: 50,
-                      height: 50,
-                      child: CircularProgressIndicator(),
+              if (state is ProductDetailGetData) ...{
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                      left: 44,
+                      right: 44,
+                      bottom: 32,
+                      top: 20,
+                    ),
+                    child: Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                          color: Colors.white),
+                      height: 46,
+                      child: Row(
+                        children: [
+                          const SizedBox(
+                            width: 16,
+                          ),
+                          Image.asset('assets/images/icon_apple_blue.png'),
+                          Expanded(
+                            child: state.categoryProductDetail.fold(
+                              (l) {
+                                return const Text(
+                                  'اطلاعات محصول',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontFamily: 'SB',
+                                    color: CustomColor.blue,
+                                  ),
+                                );
+                              },
+                              (categoryResponse) {
+                                return Text(
+                                  categoryResponse.title,
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontFamily: 'SB',
+                                    color: CustomColor.blue,
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                          Image.asset('assets/images/icon_back.png'),
+                          const SizedBox(
+                            width: 16,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              } else ...{
-                if (state is ProductDetailGetData) ...{
-                  SliverToBoxAdapter(
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                        left: 44,
-                        right: 44,
-                        bottom: 32,
-                        top: 20,
-                      ),
-                      child: Container(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15),
-                            color: Colors.white),
-                        height: 46,
-                        child: Row(
-                          children: [
-                            const SizedBox(
-                              width: 16,
-                            ),
-                            Image.asset('assets/images/icon_apple_blue.png'),
-                            Expanded(
-                              child: state.categoryProductDetail.fold(
-                                (l) {
-                                  return const Text(
-                                    'اطلاعات محصول',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontFamily: 'SB',
-                                      color: CustomColor.blue,
-                                    ),
-                                  );
-                                },
-                                (categoryResponse) {
-                                  return Text(
-                                    categoryResponse.title,
-                                    textAlign: TextAlign.center,
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      fontFamily: 'SB',
-                                      color: CustomColor.blue,
-                                    ),
-                                  );
-                                },
-                              ),
-                            ),
-                            Image.asset('assets/images/icon_back.png'),
-                            const SizedBox(
-                              width: 16,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                },
-                if (state is ProductDetailGetData) ...{
-                  SliverToBoxAdapter(
-                    child: Padding(
-                      padding: const EdgeInsets.only(bottom: 20),
-                      child: Text(
-                        widget.prodct.name,
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontFamily: 'SB',
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                  )
-                },
-                if (state is ProductDetailGetData) ...[
-                  state.productDetailImage.fold(
-                    (l) {
-                      return const SliverToBoxAdapter(
-                        child: Text('Error'),
-                      );
-                    },
-                    (r) {
-                      return ProductDetail(
-                        productList: r,
-                        defaultThumnail: widget.prodct.thumbnail,
-                      );
-                    },
-                  ),
-                ],
-                if (state is ProductDetailGetData) ...{
-                  state.productVarientsList.fold(
-                    (errorMessage) {
-                      return SliverToBoxAdapter(
-                        child: Text(errorMessage),
-                      );
-                    },
-                    (prodctVarinetList) {
-                      return ContainerGenerator(prodctVarinetList);
-                    },
-                  ),
-                },
-                if (state is ProductDetailGetData) ...{
-                  state.productProperties.fold(
-                    (l) {
-                      return SliverToBoxAdapter(
-                        child: Text(l),
-                      );
-                    },
-                    (properties) {
-                      return Properties(properties);
-                    },
-                  ),
-                },
-                ProductDescription(widget.prodct.description),
-                const UsersFeedBack(),
-                BasketBox(widget.prodct)
               },
+              if (state is ProductDetailGetData) ...{
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 20),
+                    child: Text(
+                      widget.prodct.name,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontFamily: 'SB',
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                )
+              },
+              if (state is ProductDetailGetData) ...[
+                state.productDetailImage.fold(
+                  (l) {
+                    return const SliverToBoxAdapter(
+                      child: Text('Error'),
+                    );
+                  },
+                  (r) {
+                    return ProductDetail(
+                      productList: r,
+                      defaultThumnail: widget.prodct.thumbnail,
+                    );
+                  },
+                ),
+              ],
+              if (state is ProductDetailGetData) ...{
+                state.productVarientsList.fold(
+                  (errorMessage) {
+                    return SliverToBoxAdapter(
+                      child: Text(errorMessage),
+                    );
+                  },
+                  (prodctVarinetList) {
+                    return ContainerGenerator(prodctVarinetList);
+                  },
+                ),
+              },
+              if (state is ProductDetailGetData) ...{
+                state.productProperties.fold(
+                  (l) {
+                    return SliverToBoxAdapter(
+                      child: Text(l),
+                    );
+                  },
+                  (properties) {
+                    return Properties(properties);
+                  },
+                ),
+              },
+              ProductDescription(widget.prodct.description),
+              const UsersFeedBack(),
+              BasketBox(widget.prodct)
             ],
           );
         }),
