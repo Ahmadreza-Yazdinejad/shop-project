@@ -519,9 +519,11 @@ class _PropertiesState extends State<Properties> {
         children: [
           GestureDetector(
             onTap: () {
-              setState(() {
-                isVisibel = !isVisibel;
-              });
+              setState(
+                () {
+                  isVisibel = !isVisibel;
+                },
+              );
             },
             child: Container(
               margin: const EdgeInsets.only(left: 44, right: 44, top: 24),
@@ -558,37 +560,49 @@ class _PropertiesState extends State<Properties> {
           Visibility(
             visible: isVisibel,
             child: Container(
-              padding: const EdgeInsets.all(12),
+              padding: const EdgeInsets.only(
+                  left: 12, right: 12, bottom: 12, top: 0),
               margin: const EdgeInsets.only(left: 44, right: 44, top: 24),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(15),
                 border: Border.all(width: 1, color: CustomColor.gery),
               ),
-              child: ListView.builder(
-                itemCount: widget.propList.length,
-                shrinkWrap: true,
-                itemBuilder: (context, index) {
-                  return Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Flexible(
-                        child: Text(
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          '${widget.propList[index].title}:${widget.propList[index].value}',
-                          textAlign: TextAlign.right,
-                          style: const TextStyle(
-                              fontFamily: 'SM', fontSize: 15, height: 2),
-                        ),
-                      ),
-                    ],
-                  );
-                },
-              ),
+              child: _getPropertyListView(widget.propList),
             ),
           ),
         ],
       ),
+    );
+  }
+}
+
+Widget _getPropertyListView(List<ProductProperties> propList) {
+  if (propList.isEmpty) {
+    return const Text(
+      'مشخصات فنی از سوی فروشنده ثبت نشده است',
+      style: TextStyle(fontFamily: 'SM', fontSize: 15, height: 2),
+    );
+  } else {
+    return ListView.builder(
+      itemCount: propList.length,
+      shrinkWrap: true,
+      itemBuilder: (context, index) {
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Flexible(
+              child: Text(
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                '${propList[index].title}:${propList[index].value}',
+                textAlign: TextAlign.right,
+                style:
+                    const TextStyle(fontFamily: 'SM', fontSize: 15, height: 2),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }
