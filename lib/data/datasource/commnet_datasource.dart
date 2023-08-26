@@ -13,9 +13,9 @@ class CommnetRemoteDataSource extends ICommnetDataSource {
   @override
   Future<List<Comment>> getCommentList(String productId) async {
     try {
-      Map<String, String> qParms = {'filter': 'product_id=$productId'};
+      Map<String, String> qParames = {'filter': 'product_id="$productId"'};
       var response = await _dio.get('collections/comment/records',
-          queryParameters: qParms);
+          queryParameters: qParames);
       return response.data['items']
           .map<Comment>(
             (jsoneMapObject) => Comment.formMapJsone(jsoneMapObject),

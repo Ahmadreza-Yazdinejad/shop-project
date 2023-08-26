@@ -1,4 +1,7 @@
 import 'dart:ui';
+import 'package:apple_shop/bloc/commnets/commnet.event.dart';
+import 'package:apple_shop/bloc/commnets/commnet_bloc.dart';
+import 'package:apple_shop/bloc/commnets/commnet_state.dart';
 import 'package:apple_shop/ui/widgets/loading_animaiton.dart';
 import 'package:apple_shop/utility/extentions/int_extentions.dart';
 import 'package:flutter/material.dart';
@@ -175,7 +178,7 @@ class DetailContent extends StatelessWidget {
                 ),
               },
               ProductDescription(widget.prodct.description),
-              const UsersFeedBack(),
+              UsersFeedBack(widget.prodct),
               BasketBox(widget.prodct)
             ],
           );
@@ -213,125 +216,192 @@ class BasketBox extends StatelessWidget {
 }
 
 class UsersFeedBack extends StatelessWidget {
-  const UsersFeedBack({
+  final Product product;
+  const UsersFeedBack(
+    this.product, {
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
-      child: Container(
-        margin: const EdgeInsets.only(left: 44, right: 44, top: 24),
-        height: 46,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15),
-          border: Border.all(width: 1, color: CustomColor.gery),
-        ),
-        child: Row(
-          children: [
-            const SizedBox(
-              width: 10,
-            ),
-            Image.asset('assets/images/icon_left_categroy.png'),
-            const SizedBox(
-              width: 10,
-            ),
-            const Text(
-              'مشاهده همه',
-              style: TextStyle(fontFamily: 'SB', fontSize: 12),
-            ),
-            const Spacer(),
-            Stack(
-              clipBehavior: Clip.none,
-              children: [
-                Container(
-                  margin: const EdgeInsets.only(left: 10),
-                  height: 26,
-                  width: 26,
-                  decoration: const BoxDecoration(
-                    color: Colors.green,
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(8),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  right: 15,
-                  child: Container(
+      child: GestureDetector(
+        onTap: () {
+          showModalBottomSheet(
+            context: context,
+            builder: (context) {
+              return BlocProvider(
+                create: (context) {
+                  final bloc = locator.get<CommentBloc>();
+                  bloc.add(CommnetInitializeEvent(product.id));
+                  return bloc;
+                },
+                child: const BottemSheetContent(),
+              );
+            },
+          );
+        },
+        child: Container(
+          margin: const EdgeInsets.only(left: 44, right: 44, top: 24),
+          height: 46,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15),
+            border: Border.all(width: 1, color: CustomColor.gery),
+          ),
+          child: Row(
+            children: [
+              const SizedBox(
+                width: 10,
+              ),
+              Image.asset('assets/images/icon_left_categroy.png'),
+              const SizedBox(
+                width: 10,
+              ),
+              const Text(
+                'مشاهده همه',
+                style: TextStyle(fontFamily: 'SB', fontSize: 12),
+              ),
+              const Spacer(),
+              Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  Container(
                     margin: const EdgeInsets.only(left: 10),
                     height: 26,
                     width: 26,
                     decoration: const BoxDecoration(
-                      color: Colors.blue,
+                      color: Colors.green,
                       borderRadius: BorderRadius.all(
                         Radius.circular(8),
                       ),
                     ),
                   ),
-                ),
-                Positioned(
-                  right: 30,
-                  child: Container(
-                    margin: const EdgeInsets.only(left: 10),
-                    height: 26,
-                    width: 26,
-                    decoration: const BoxDecoration(
-                      color: Colors.red,
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(8),
+                  Positioned(
+                    right: 15,
+                    child: Container(
+                      margin: const EdgeInsets.only(left: 10),
+                      height: 26,
+                      width: 26,
+                      decoration: const BoxDecoration(
+                        color: Colors.blue,
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(8),
+                        ),
                       ),
                     ),
                   ),
-                ),
-                Positioned(
-                  right: 45,
-                  child: Container(
-                    margin: const EdgeInsets.only(left: 10),
-                    height: 26,
-                    width: 26,
-                    decoration: const BoxDecoration(
-                      color: Colors.purple,
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(8),
+                  Positioned(
+                    right: 30,
+                    child: Container(
+                      margin: const EdgeInsets.only(left: 10),
+                      height: 26,
+                      width: 26,
+                      decoration: const BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(8),
+                        ),
                       ),
                     ),
                   ),
-                ),
-                Positioned(
-                  right: 60,
-                  child: Container(
-                    margin: const EdgeInsets.only(left: 10),
-                    height: 26,
-                    width: 26,
-                    decoration: const BoxDecoration(
-                      color: Colors.grey,
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(8),
-                      ),
-                    ),
-                    child: const Center(
-                      child: Text(
-                        '+10',
-                        style: TextStyle(fontFamily: 'SB', fontSize: 12),
+                  Positioned(
+                    right: 45,
+                    child: Container(
+                      margin: const EdgeInsets.only(left: 10),
+                      height: 26,
+                      width: 26,
+                      decoration: const BoxDecoration(
+                        color: Colors.purple,
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(8),
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(
-              width: 10,
-            ),
-            const Text(
-              ': نظرات کاربران',
-              style: TextStyle(fontFamily: 'SM'),
-            ),
-            const SizedBox(
-              width: 10,
-            ),
-          ],
+                  Positioned(
+                    right: 60,
+                    child: Container(
+                      margin: const EdgeInsets.only(left: 10),
+                      height: 26,
+                      width: 26,
+                      decoration: const BoxDecoration(
+                        color: Colors.grey,
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(8),
+                        ),
+                      ),
+                      child: const Center(
+                        child: Text(
+                          '+10',
+                          style: TextStyle(fontFamily: 'SB', fontSize: 12),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(
+                width: 10,
+              ),
+              const Text(
+                ': نظرات کاربران',
+                style: TextStyle(fontFamily: 'SM'),
+              ),
+              const SizedBox(
+                width: 10,
+              ),
+            ],
+          ),
         ),
       ),
+    );
+  }
+}
+
+class BottemSheetContent extends StatelessWidget {
+  const BottemSheetContent({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<CommentBloc, CommentState>(
+      builder: (context, state) {
+        if (state is CommnetLoading) {
+          return const Center(
+            child: LoadingAnimation(),
+          );
+        }
+        return CustomScrollView(
+          slivers: [
+            if (state is CommentGetData) ...{
+              state.getCommnetList.fold(
+                (errorMessage) {
+                  return SliverToBoxAdapter(
+                    child: Text(errorMessage),
+                  );
+                },
+                (response) {
+                  if (response.isEmpty) {
+                    return const SliverToBoxAdapter(
+                      child: Center(
+                          child: Text('نظری برای این محصول ثبت نشده است')),
+                    );
+                  }
+                  return SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                      (context, index) {
+                        return Text(response[index].text);
+                      },
+                      childCount: response.length,
+                    ),
+                  );
+                },
+              ),
+            },
+          ],
+        );
+      },
     );
   }
 }

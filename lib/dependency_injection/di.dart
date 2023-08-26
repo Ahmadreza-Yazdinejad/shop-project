@@ -1,5 +1,6 @@
 import 'package:apple_shop/bloc/auhtentication/authentication_bloc.dart';
 import 'package:apple_shop/bloc/category/category_bloc.dart';
+import 'package:apple_shop/bloc/commnets/commnet_bloc.dart';
 import 'package:apple_shop/data/datasource/commnet_datasource.dart';
 import 'package:apple_shop/data/repository/comment_respository.dart';
 import 'package:apple_shop/utility/launch_url.dart';
@@ -53,12 +54,20 @@ void _component() {
   );
 
   //bloc........
-  //ProductCategoryBloc
+  //commnetBloc
+  locator.registerFactory<CommentBloc>(
+    () => CommentBloc(
+      locator.get(),
+    ),
+  );
+  //AuthBloc
   locator.registerFactory<AuthBloc>(
     () => AuthBloc(
       locator.get(),
     ),
   );
+
+  //ProductCategoryBloc
   locator.registerFactory<ProductCategoryBloc>(
     () => ProductCategoryBloc(
       locator.get(),
