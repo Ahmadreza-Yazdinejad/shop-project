@@ -233,10 +233,19 @@ class UsersFeedBack extends StatelessWidget {
               return BlocProvider(
                 create: (context) {
                   final bloc = locator.get<CommentBloc>();
-                  bloc.add(CommnetInitializeEvent(product.id));
+                  bloc.add(
+                    CommnetInitializeEvent(product.id),
+                  );
                   return bloc;
                 },
-                child: const BottemSheetContent(),
+                child: DraggableScrollableSheet(
+                  initialChildSize: 0.5,
+                  minChildSize: 0.2,
+                  maxChildSize: 0.7,
+                  builder: (context, controller) {
+                    return BottemSheetContent(controller);
+                  },
+                ),
               );
             },
           );
@@ -359,7 +368,9 @@ class UsersFeedBack extends StatelessWidget {
 }
 
 class BottemSheetContent extends StatelessWidget {
-  const BottemSheetContent({
+  final ScrollController _controller;
+  const BottemSheetContent(
+    this._controller, {
     super.key,
   });
 
@@ -373,6 +384,7 @@ class BottemSheetContent extends StatelessWidget {
           );
         }
         return CustomScrollView(
+          controller: _controller,
           slivers: [
             if (state is CommentGetData) ...{
               state.getCommnetList.fold(
@@ -387,15 +399,16 @@ class BottemSheetContent extends StatelessWidget {
                       child: Center(
                           child: Text('نظری برای این محصول ثبت نشده است')),
                     );
+                  } else {
+                    return SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                        (context, index) {
+                          return Text(response[index].text);
+                        },
+                        childCount: response.length,
+                      ),
+                    );
                   }
-                  return SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                      (context, index) {
-                        return Text(response[index].text);
-                      },
-                      childCount: response.length,
-                    ),
-                  );
                 },
               ),
             },
