@@ -52,7 +52,7 @@ Widget _getHomeScreenContent(HomeState state) {
     return CustomScrollView(
       slivers: [
         const TopPadding(),
-        const SearchBox(),
+        SearchBox(),
         state.bannerList.fold(
           (l) {
             return Text(l);
@@ -346,11 +346,16 @@ class BannerList extends StatelessWidget {
   }
 }
 
-class SearchBox extends StatelessWidget {
+class SearchBox extends StatefulWidget {
   const SearchBox({
     super.key,
   });
 
+  @override
+  State<SearchBox> createState() => _SearchBoxState();
+}
+
+class _SearchBoxState extends State<SearchBox> {
   @override
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
@@ -371,14 +376,21 @@ class SearchBox extends StatelessWidget {
                 width: 16,
               ),
               Image.asset('assets/images/icon_apple_blue.png'),
-              const Expanded(
-                child: Text(
-                  textAlign: TextAlign.end,
-                  'جستجوی محصولات',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontFamily: 'SB',
-                    color: CustomColor.gery,
+              Expanded(
+                child: TextField(
+                  onChanged: (value) {
+                    print(value);
+                  },
+                  keyboardType: TextInputType.text,
+                  textAlign: TextAlign.right,
+                  decoration: const InputDecoration(
+                    border: InputBorder.none,
+                    hintText: 'جستجوی محصولات',
+                    hintStyle: TextStyle(
+                      fontSize: 16,
+                      fontFamily: 'SB',
+                      color: CustomColor.gery,
+                    ),
                   ),
                 ),
               ),
