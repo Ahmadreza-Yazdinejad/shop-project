@@ -228,6 +228,10 @@ class UsersFeedBack extends StatelessWidget {
       child: GestureDetector(
         onTap: () {
           showModalBottomSheet(
+            showDragHandle: true,
+            isDismissible: false,
+            isScrollControlled: true,
+            useSafeArea: true,
             backgroundColor: CustomColor.backgroundScreenColor,
             context: context,
             builder: (context) {
@@ -242,14 +246,7 @@ class UsersFeedBack extends StatelessWidget {
                 child: Padding(
                   padding: EdgeInsets.only(
                       bottom: MediaQuery.of(context).viewInsets.bottom),
-                  child: DraggableScrollableSheet(
-                    initialChildSize: 0.5,
-                    minChildSize: 0.2,
-                    maxChildSize: 0.7,
-                    builder: (context, controller) {
-                      return BottemSheetContent(controller);
-                    },
-                  ),
+                  child: BottemSheetContent(product.id),
                 ),
               );
             },
@@ -373,11 +370,12 @@ class UsersFeedBack extends StatelessWidget {
 }
 
 class BottemSheetContent extends StatelessWidget {
-  final ScrollController _controller;
-  const BottemSheetContent(
-    this._controller, {
+  String productId;
+  BottemSheetContent(
+    this.productId, {
     super.key,
   });
+  TextEditingController _texEditingController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -388,79 +386,165 @@ class BottemSheetContent extends StatelessWidget {
             child: LoadingAnimation(),
           );
         }
-        return CustomScrollView(
-          controller: _controller,
-          slivers: [
-            if (state is CommentGetData) ...{
-              state.getCommnetList.fold(
-                (errorMessage) {
-                  return SliverToBoxAdapter(
-                    child: Text(errorMessage),
-                  );
-                },
-                (response) {
-                  if (response.isEmpty) {
-                    return const SliverToBoxAdapter(
-                      child: Center(
-                        child: Text('نظری برای این محصول ثبت نشده است'),
-                      ),
-                    );
-                  } else {
-                    return SliverList(
-                      delegate: SliverChildBuilderDelegate(
-                        (context, index) {
-                          return Container(
-                            padding: const EdgeInsets.all(16),
-                            margin: const EdgeInsets.symmetric(
-                                horizontal: 16, vertical: 8),
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(16)),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      Text(
-                                        response[index].username,
-                                        style: const TextStyle(
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      const SizedBox(
-                                        height: 8,
-                                      ),
-                                      Text(
-                                        response[index].text,
-                                        textAlign: TextAlign.end,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                const SizedBox(
-                                  width: 16,
-                                ),
-                                SizedBox(
-                                  height: 40,
-                                  width: 40,
-                                  child: (response[index].avatar.isNotEmpty)
-                                      ? CatchImage(
-                                          image: response[index].thumnailUrl,
-                                        )
-                                      : Image.asset('assets/images/avatar.png'),
-                                ),
-                              ],
-                            ),
+        return Column(
+          children: [
+            Expanded(
+              child: SafeArea(
+                child: CustomScrollView(
+                  slivers: [
+                    if (state is CommentGetData) ...{
+                      state.getCommnetList.fold(
+                        (errorMessage) {
+                          return const SliverToBoxAdapter(
+                            child: Text('!خطایی در نمایش نظرات به وجود آمده'),
                           );
                         },
-                        childCount: response.length,
+                        (response) {
+                          if (response.isEmpty) {
+                            return const SliverToBoxAdapter(
+                              child: Center(
+                                child: Text('نظری برای این محصول ثبت نشده است'),
+                              ),
+                            );
+                          } else {
+                            return SliverList(
+                              delegate: SliverChildBuilderDelegate(
+                                (context, index) {
+                                  return Container(
+                                    padding: const EdgeInsets.all(16),
+                                    margin: const EdgeInsets.symmetric(
+                                        horizontal: 16, vertical: 8),
+                                    decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius:
+                                            BorderRadius.circular(16)),
+                                    child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.end,
+                                            children: [
+                                              Text(
+                                                response[index].username.isEmpty
+                                                    ? 'کاربر'
+                                                    : response[index].username,
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              const SizedBox(
+                                                height: 8,
+                                              ),
+                                              Text(
+                                                response[index].text,
+                                                textAlign: TextAlign.end,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          width: 16,
+                                        ),
+                                        SizedBox(
+                                          height: 40,
+                                          width: 40,
+                                          child: (response[index]
+                                                  .avatar
+                                                  .isNotEmpty)
+                                              ? CatchImage(
+                                                  image: response[index]
+                                                      .thumnailUrl,
+                                                )
+                                              : Image.asset(
+                                                  'assets/images/avatar.png'),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                                childCount: response.length,
+                              ),
+                            );
+                          }
+                        },
                       ),
-                    );
-                  }
-                },
+                    }
+                  ],
+                ),
               ),
-            },
+            ),
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Directionality(
+                textDirection: TextDirection.rtl,
+                child: TextField(
+                  controller: _texEditingController,
+                  decoration: InputDecoration(
+                    labelStyle: const TextStyle(
+                        fontSize: 18, fontFamily: 'SM', color: Colors.black),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20),
+                      borderSide:
+                          const BorderSide(width: 2, color: Colors.black),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20),
+                      borderSide:
+                          const BorderSide(width: 3, color: CustomColor.blue),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                if (_texEditingController.text.isEmpty) {
+                  return;
+                }
+                context.read<CommentBloc>().add(
+                      CommentPost(_texEditingController.text, productId),
+                    );
+                _texEditingController.text = '';
+              },
+              child: Padding(
+                padding: const EdgeInsets.only(
+                    top: 0, bottom: 10, left: 24, right: 24),
+                child: Stack(
+                  alignment: AlignmentDirectional.bottomCenter,
+                  children: [
+                    Container(
+                      height: 60,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        color: CustomColor.blue,
+                      ),
+                    ),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(15),
+                      child: BackdropFilter(
+                        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                        child: const SizedBox(
+                          height: 53,
+                          child: Center(
+                            child: Text(
+                              'ثبت نظر',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontFamily: 'SM',
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ],
         );
       },

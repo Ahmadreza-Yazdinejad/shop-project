@@ -1,11 +1,9 @@
 import 'package:apple_shop/utility/extentions/int_extentions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import '../../../constants/colors.dart';
 import '../../../data/model/main_product.dart';
 import '../../bloc/basket/basket_bloc.dart';
-
 import '../../dependency_injection/di.dart';
 import '../screens/product_detail_screen.dart';
 import 'catched_image.dart';

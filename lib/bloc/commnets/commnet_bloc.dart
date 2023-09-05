@@ -9,10 +9,18 @@ class CommentBloc extends Bloc<CommentEvent, CommentState> {
     on<CommnetInitializeEvent>(
       (event, emit) async {
         emit(CommnetLoading());
-        final _resposne = await _respository.getCommnetList(event.proudctId);
+        final resposne = await _respository.getCommnetList(event.proudctId);
         emit(
-          CommentGetData(_resposne),
+          CommentGetData(resposne),
         );
+      },
+    );
+    on<CommentPost>(
+      (event, emit) async {
+        emit(CommnetLoading());
+        await _respository.getCommentPost(event.productId, event.comment);
+        final resposne = await _respository.getCommnetList(event.productId);
+        emit(CommentGetData(resposne));
       },
     );
   }

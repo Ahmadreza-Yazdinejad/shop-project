@@ -6,6 +6,8 @@ import '../../utility/Errors/api_exception.dart';
 
 abstract class ICommnetRespository {
   Future<Either<String, List<Comment>>> getCommnetList(String productId);
+  Future<Either<String, String>> getCommentPost(
+      String productId, String comment);
 }
 
 class CommentRespository extends ICommnetRespository {
@@ -20,6 +22,19 @@ class CommentRespository extends ICommnetRespository {
       return left('خطایی رخ داد');
     } catch (ex) {
       return left('خطایی رخ داد');
+    }
+  }
+
+  @override
+  Future<Either<String, String>> getCommentPost(
+      String productId, String comment) async {
+    try {
+      await _dataSource.commentPost(comment, productId);
+      return right('نظر شما با موفقیت ثبت شد');
+    } on ApiException {
+      return left('مشکلی در ثبت نظر به وجود آمده');
+    } catch (ex) {
+      return left('مشکلی در ثبت نظر به وجود آمده');
     }
   }
 }
